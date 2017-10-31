@@ -64,10 +64,10 @@ public class Calculator
    
    //calculates sub formulas contained in parenthesis
    public static char[] parenthesis(char[] equation, int place){
-      int place2 = 0;
+      int place2 = -1;
       for (int i = place +1 ; i < equation.length; i++){
          if(equation[i] == '('){
-            equation = parenthesis(equation, i);
+            place = i;
          }else if(equation[i] == ')' && place != -1 && i != place+1){
             place2 = i;
             char[] value = calculate(Arrays.copyOfRange(equation, place+1, i));
@@ -97,7 +97,7 @@ public class Calculator
          }
       }
       //checks for extra parenthesis
-      if(place2 == 0 && place > -1){
+      if(place2 == -1 && place > -1){
          System.out.println("This equation is invalid, it contains incorrect characters");
          char[] blank = new char[0];
          return blank;
@@ -126,12 +126,12 @@ public class Calculator
                number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
                amount2++;
             }
-            if(amount2 == 1 ||amount1 == 1){
+            if(amount2 == 1||amount1 == 1){
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
                char[] blank = new char[0];
                return blank;
             }
-            int valued = (int)Math.pow(number1, number2);
+            double valued = Math.pow(number1, number2);
             char[] value = ("" + valued).toCharArray();
             char[] hold = new char[equation.length-amount1-amount2+1+value.length];
             int where = 0;
@@ -155,27 +155,37 @@ public class Calculator
       for(int i = 0 ; i < equation.length; i++){
          if(equation[i] == '*' || equation[i] == '/'){
             int amount1 = 1;
-            int number1 = 0;  //find number before * or /
+            double number1 = 0;  //find number before * or /
             while(i-amount1 >= 0 && (equation[i-amount1] == '1' || equation[i-amount1] == '2' || equation[i-amount1] == '3' || equation[i-amount1] == '4' || 
             equation[i-amount1] == '5'|| equation[i-amount1] == '6' || equation[i-amount1] == '7' || equation[i-amount1] == '8' || equation[i-amount1] == '9' || 
-            equation[i-amount1] == '0')){
-               number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, amount1-1);
-               amount1++;
+            equation[i-amount1] == '0' || equation[i-amount1] == '.')){
+               if(equation[i-amount1] == '.'){
+                  number1 = number1/Math.pow(10, amount1-1);
+                  amount1++;
+               }else{
+                  number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, amount1-1);
+                  amount1++;
+               }
             }
             int amount2 = 1;
-            int number2 = 0;      //finds number after * or /
+            double number2 = 0;      //finds number after * or /
             while(i+amount2 < equation.length && (equation[i+amount2] == '1' || equation[i+amount2] == '2' || equation[i+amount2] == '3' || equation[i+amount2] == '4' || 
             equation[i+amount2] == '5'|| equation[i+amount2] == '6' || equation[i+amount2] == '7' || equation[i+amount2] == '8' || equation[i+amount2] == '9' || 
-            equation[i+amount2] == '0')){
+            equation[i+amount2] == '0' || equation[i+amount2] == '.')){
+               if(equation[i-amount2] == '.'){
+                  number1 = number1/Math.pow(10, amount1-1);
+                  amount2++;
+               }else{
                number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
                amount2++;
+               }
             }
-            if(amount2 == 1 ||amount1 == 1){
+            if(amount2 == 1 ||amount1 == 1 || number2 == 0){
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
                char[] blank = new char[0];
                return blank;
             }
-            int valued;
+            double valued;
             if (equation[i] == '*'){
                valued = number1*number2;
             }else{
@@ -223,7 +233,7 @@ public class Calculator
                number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
                amount2++;
             }
-            if(amount2 == 1 ||amount1 == 1){
+            if(amount1 == 1||amount2 == 1){
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
                char[] blank = new char[0];
                return blank;
