@@ -25,11 +25,14 @@ public class Calculator
          char[] equation = input.next().toCharArray();
          boolean correct = check(equation);
          if(correct){
+            equation = equals(equation);
             equation = parenthesis(equation, -1);
             equation  = calculate(equation);
-            System.out.print("The equation is equal to ");
-            System.out.print(equation);
-            System.out.println();
+            if(equation.length > 0){
+               System.out.print("The equation is equal to ");
+               System.out.print(equation);
+               System.out.println();
+            }
          }else{
             System.out.println("This equation is invalid, it contains incorrect characters");
          }
@@ -51,12 +54,22 @@ public class Calculator
       return true;
    }
    
+   //removes equals sign at the end if there is one
+   public static char[] equals(char[] equation){
+      if(equation[equation.length-1] == '='){
+         return Arrays.copyOfRange(equation, 0, equation.length-1);
+      }
+      return equation;
+   }
+   
    //calculates sub formulas contained in parenthesis
    public static char[] parenthesis(char[] equation, int place){
+      int place2 = 0;
       for (int i = place +1 ; i < equation.length; i++){
          if(equation[i] == '('){
             equation = parenthesis(equation, i);
          }else if(equation[i] == ')' && place != -1 && i != place+1){
+            place2 = i;
             char[] value = calculate(Arrays.copyOfRange(equation, place+1, i));
             char[] hold = new char[equation.length-i+place-1+value.length];
             int where = 1;
@@ -72,13 +85,22 @@ public class Calculator
             }
             i = -1;
             equation = hold;
-         }else if(equation[i] == ')' && place != -1 && i == place+1){  
+         }else if(equation[i] == ')' && place != -1 && i == place+1){ 
+             place2 = 1; 
              equation[place] = 0;
              equation[i] = 0;
          }else if(equation[i] == ')' && place == -1){
             System.out.println("This equation is invalid, it contains incorrect characters");
+            char[] blank = new char[0];
+            return blank;
          }else{
          }
+      }
+      //checks for extra parenthesis
+      if(place2 == 0 && place > -1){
+         System.out.println("This equation is invalid, it contains incorrect characters");
+         char[] blank = new char[0];
+         return blank;
       }
       return equation;
    }
