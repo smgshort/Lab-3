@@ -357,7 +357,6 @@ public class Calculator
                number2 = -number2;
             }
             if(amount1 == 1||amount2 == 1){
-               System.out.println("Here");//////////////HERE BADNESS HAPPENS
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
                char[] blank = new char[0];
                return blank;
