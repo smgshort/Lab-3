@@ -111,20 +111,56 @@ public class Calculator
       for(int i = 0 ; i < equation.length; i++){
          if(equation[i] == '^'){
             int amount1 = 1;
-            int number1 = 0;  //find number before ^
+            double number1 = 0;  //find number before ^
+            int points = 0;
+            int digits = 1;
             while(i-amount1 >= 0 && (equation[i-amount1] == '1' || equation[i-amount1] == '2' || equation[i-amount1] == '3' || equation[i-amount1] == '4' || 
             equation[i-amount1] == '5'|| equation[i-amount1] == '6' || equation[i-amount1] == '7' || equation[i-amount1] == '8' || equation[i-amount1] == '9' || 
-            equation[i-amount1] == '0')){
-               number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, amount1-1);
+            equation[i-amount1] == '0'|| equation[i-amount1] == '.')){
+               if(equation[i-amount1] == '.' && points ==0){
+                  number1 = number1/(Math.pow(10, amount1-1));
+                  amount1++;
+                  points++;
+                  digits = 1;
+               }else if(equation[i-amount1] == '.' && points !=0){
+                  System.out.println("This equation is invalid, it does not have the characters in a logical order.");
+                  char[] blank = new char[0];
+                  return blank;
+               }else{
+                  number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, digits-1);
+                  System.out.println(number1);
+                  amount1++;
+                  digits++;
+               }
+            }
+            //determines if the number is negative
+            if(i-amount1 >= 0 && equation[i-amount1] == '-' &&(i-amount1-1 < 0 || (equation[i-amount1-1] != '1' && equation[i-amount1-1] != '2' && equation[i-amount1-1] != '3' &&
+                equation[i-amount1-1] != '4' && equation[i-amount1-1] != '5'&& equation[i-amount1-1] != '6' && equation[i-amount1-1] != '7' && equation[i-amount1-1] != '8' &&
+                 equation[i-amount1-1] != '9' && equation[i-amount1-1] != '0'))){
+               number1 = -number1;
                amount1++;
             }
             int amount2 = 1;
             int number2 = 0;      //finds number after ^
+            boolean negative = false;
             while(i+amount2 < equation.length && (equation[i+amount2] == '1' || equation[i+amount2] == '2' || equation[i+amount2] == '3' || equation[i+amount2] == '4' || 
             equation[i+amount2] == '5'|| equation[i+amount2] == '6' || equation[i+amount2] == '7' || equation[i+amount2] == '8' || equation[i+amount2] == '9' || 
-            equation[i+amount2] == '0')){
-               number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
-               amount2++;
+            equation[i+amount2] == '0'  || equation[i+amount2] == '-')){
+               if(equation[i+amount2] == '-'){ //determines if number is negative
+                  negative = true;
+                  amount2++;
+               }else if (equation[i+amount2] == '-' && amount2 != 1){ //determines is - is in the wrong place
+                  System.out.println("This equation is invalid, it does not have the characters in a logical order.");
+                  char[] blank = new char[0];
+                  return blank;
+               }else{
+                  number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
+                  amount2++;
+               }
+            }
+            //makes the negtive if it is supposed to be
+            if(negative){
+               number2 = -number2;
             }
             if(amount2 == 1||amount1 == 1){
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
@@ -156,32 +192,63 @@ public class Calculator
          if(equation[i] == '*' || equation[i] == '/'){
             int amount1 = 1;
             double number1 = 0;  //find number before * or /
+            int points = 0;
+            int digits = 1;
             while(i-amount1 >= 0 && (equation[i-amount1] == '1' || equation[i-amount1] == '2' || equation[i-amount1] == '3' || equation[i-amount1] == '4' || 
             equation[i-amount1] == '5'|| equation[i-amount1] == '6' || equation[i-amount1] == '7' || equation[i-amount1] == '8' || equation[i-amount1] == '9' || 
             equation[i-amount1] == '0' || equation[i-amount1] == '.')){
-               if(equation[i-amount1] == '.'){
-                  number1 = number1/(Math.pow(10, amount1));
+               if(equation[i-amount1] == '.' && points ==0){
+                  number1 = number1/(Math.pow(10, amount1-1));
                   amount1++;
-                  //System.out.println("here");
-                  //System.out.println(number1);
+                  points++;
+                  digits = 1;
+               }else if(equation[i-amount1] == '.' && points !=0){
+                  System.out.println("This equation is invalid, it does not have the characters in a logical order.");
+                  char[] blank = new char[0];
+                  return blank;
                }else{
-                  number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, amount1-1);
+                  number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, digits-1);
                   amount1++;
-                  //System.out.println(number1);
+                  digits++;
                }
+            }
+            //determines if the number is negative
+            if(i-amount1 >= 0 && equation[i-amount1] == '-' &&(i-amount1-1 < 0 || (equation[i-amount1-1] != '1' && equation[i-amount1-1] != '2' && equation[i-amount1-1] != '3' &&
+                equation[i-amount1-1] != '4' && equation[i-amount1-1] != '5'&& equation[i-amount1-1] != '6' && equation[i-amount1-1] != '7' && equation[i-amount1-1] != '8' &&
+                 equation[i-amount1-1] != '9' && equation[i-amount1-1] != '0'))){
+               number1 = -number1;
+               amount1++;
             }
             int amount2 = 1;
             double number2 = 0;      //finds number after * or /
+            boolean negative = false;
+            boolean digit = false;
+            int digits2 = 1;
             while(i+amount2 < equation.length && (equation[i+amount2] == '1' || equation[i+amount2] == '2' || equation[i+amount2] == '3' || equation[i+amount2] == '4' || 
             equation[i+amount2] == '5'|| equation[i+amount2] == '6' || equation[i+amount2] == '7' || equation[i+amount2] == '8' || equation[i+amount2] == '9' || 
-            equation[i+amount2] == '0' || equation[i+amount2] == '.')){
-               if(equation[i+amount2] == '.'){
-                  number2 = number2/(Math.pow(10, amount2));
+            equation[i+amount2] == '0' || equation[i+amount2] == '.'|| equation[i+amount2] == '-')){
+               if(equation[i+amount2] == '-' && amount2 == 1){//determines if number is negative
+                  negative = true;
+                  amount2++;
+               }else if (equation[i+amount2] == '-' && amount2 != 1){ //determines if - is in wrong place
+                  System.out.println("This equation is invalid, it does not have the characters in a logical order.");
+                  char[] blank = new char[0];
+                  return blank;
+               }else if(equation[i+amount2] == '.'){
+                  digit = true;
+                  amount2++;
+               }else if (digit){
+                  number2 = (Character.getNumericValue(equation[i+amount2])/(int)Math.pow(10, digits2))+number2;
+                  digits2++;
                   amount2++;
                }else{
                   number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
                   amount2++;
                }
+            }
+            //makes it negative if it is suppoesed to be
+            if(negative){
+               number2 = -number2;
             }
             if(amount2 == 1 ||amount1 == 1 || number2 == 0){
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
