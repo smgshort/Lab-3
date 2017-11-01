@@ -160,11 +160,14 @@ public class Calculator
             equation[i-amount1] == '5'|| equation[i-amount1] == '6' || equation[i-amount1] == '7' || equation[i-amount1] == '8' || equation[i-amount1] == '9' || 
             equation[i-amount1] == '0' || equation[i-amount1] == '.')){
                if(equation[i-amount1] == '.'){
-                  number1 = number1/Math.pow(10, amount1-1);
+                  number1 = number1/(Math.pow(10, amount1));
                   amount1++;
+                  //System.out.println("here");
+                  //System.out.println(number1);
                }else{
                   number1 = number1 + Character.getNumericValue(equation[i-amount1])* (int)Math.pow(10, amount1-1);
                   amount1++;
+                  //System.out.println(number1);
                }
             }
             int amount2 = 1;
@@ -172,12 +175,12 @@ public class Calculator
             while(i+amount2 < equation.length && (equation[i+amount2] == '1' || equation[i+amount2] == '2' || equation[i+amount2] == '3' || equation[i+amount2] == '4' || 
             equation[i+amount2] == '5'|| equation[i+amount2] == '6' || equation[i+amount2] == '7' || equation[i+amount2] == '8' || equation[i+amount2] == '9' || 
             equation[i+amount2] == '0' || equation[i+amount2] == '.')){
-               if(equation[i-amount2] == '.'){
-                  number1 = number1/Math.pow(10, amount1-1);
+               if(equation[i+amount2] == '.'){
+                  number2 = number2/(Math.pow(10, amount2));
                   amount2++;
                }else{
-               number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
-               amount2++;
+                  number2 = Character.getNumericValue(equation[i+amount2])+number2*10;
+                  amount2++;
                }
             }
             if(amount2 == 1 ||amount1 == 1 || number2 == 0){
@@ -234,6 +237,7 @@ public class Calculator
                amount2++;
             }
             if(amount1 == 1||amount2 == 1){
+            System.out.println("Here");//////////////
                System.out.println("This equation is invalid, it does not have the characters in a logical order.");
                char[] blank = new char[0];
                return blank;
